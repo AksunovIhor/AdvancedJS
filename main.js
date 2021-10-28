@@ -1,30 +1,58 @@
 'use strick';
 
+//custom Bind
 Function.prototype.customBind = function(thisArg, ...args){
-    return function(){
-        
+    let symbol = Symbol("function");
+    let object = Object.assign(Object.assign({}, thisArg), {[symbol] : this});
+
+    return function(...res){
+        return object[symbol](...args, ...res);
     }
 };
 
-//bind call
-function f(a,b,c){
-    return this.a + this.b + a + b + c;
+//custom Call
+Function.prototype.customCall = function(thisArg, ...args){
+    let symbol = Symbol("function");
+    let object = Object.assign(Object.assign({}, thisArg), {[symbol] : this});
+
+    return (function(...res){
+        return object[symbol](...res);
+    })();
 }
-let obj = {
-    a : 3,
-    b : 10,
+
+//Array methods
+//custom ForEach
+Array.prototype.customForEach = function (compare) {
+    for (let i = 0; i < this.length; i++) {
+        compare(this[i], i, this);
+    }
 };
 
-let ff = f.bind(obj, 1, 4, 7);
-ff();
-
-function f1(a,b,c){
-    return this.a + this.b + a + b + c;
-}
-let obj1 = {
-    a : 3,
-    b : 10,
+//custom Map
+Array.prototype.customMap = function (compare) {
+    let result = [];
+    for (let i in this) {
+        result[i] = compare(this[i], i, this);
+    }
+    return result.splice(0, this.length);
 };
 
-let ff1 = f1.call(obj1, 1, 4, 7);
-ff1();
+//custom Fillter
+Array.prototype.customFillter = function (compare) {
+    let result = [];
+    for (let i = 0; i <= this.length - 1; i++) {
+        if (compare(this[i], i, this)) {
+            result.push(this[i]);
+        }
+    }
+    return res;
+};
+
+//custom Reduce
+Array.prototype.customReduce = function (compare, accumullator) {
+    accumullator = accumullator || 0;
+    for (let i = 0; i <= this.length - 1; i++) {
+        accumullator = compare(this[i], accumullator);
+    }
+    return accumullator;
+};
