@@ -16,9 +16,9 @@ Function.prototype.customCall = function(thisArg, ...args){
     let object = Object.assign(Object.assign({}, thisArg), {[symbol] : this});
 
     return (function(...res){
-        return object[symbol](...res);
+        return object[symbol](...args);
     })();
-}
+};
 
 //Array methods
 //custom ForEach
@@ -31,28 +31,37 @@ Array.prototype.customForEach = function (compare) {
 //custom Map
 Array.prototype.customMap = function (compare) {
     let result = [];
+
     for (let i in this) {
         result[i] = compare(this[i], i, this);
     }
+
     return result.splice(0, this.length);
 };
 
 //custom Fillter
 Array.prototype.customFillter = function (compare) {
     let result = [];
+
     for (let i = 0; i <= this.length - 1; i++) {
         if (compare(this[i], i, this)) {
             result.push(this[i]);
         }
     }
-    return res;
+
+    return result;
 };
 
 //custom Reduce
-Array.prototype.customReduce = function (compare, accumullator) {
-    accumullator = accumullator || 0;
+Array.prototype.customReduce = function (compare, accum) {
+    accum = accum || 0;
+
     for (let i = 0; i <= this.length - 1; i++) {
-        accumullator = compare(this[i], accumullator);
+        accum = compare(this[i], accum);
     }
-    return accumullator;
+    
+    return accum;
 };
+
+//fibonacci Iterator
+getFibonachiNumbers
