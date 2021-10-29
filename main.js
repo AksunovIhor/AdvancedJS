@@ -64,4 +64,24 @@ Array.prototype.customReduce = function (compare, accum) {
 };
 
 //fibonacci Iterator
-getFibonachiNumbers
+let fibonacciIterator = {
+    firstNumber: 0,
+    secondNumber: 1,
+
+    [Symbol.iterator](number){
+        let fibonacciNumbers = [0, 1];
+
+        return{
+            next(){
+                return{
+                    value: (prevNumber - 1) + (nextNumber -2),
+                    done: false,
+                };
+            }
+        };
+    },
+};
+
+for(let num of fibonacciIterator){
+    console.log(num);
+}
