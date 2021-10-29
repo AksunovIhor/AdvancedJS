@@ -64,24 +64,46 @@ Array.prototype.customReduce = function (compare, accum) {
 };
 
 //fibonacci Iterator
-let fibonacciIterator = {
-    firstNumber: 0,
-    secondNumber: 1,
+let fibonachiIterator = {
+    a: 0,
+    b: 1,
+    n: 10,
+    [Symbol.iterator]() {
+       let current = this.a;
+       let next = this.b;
+       let n = this.n;
+       let arr = [current, next];
+       return {
+          next() {
+             arr.push(arr[current] + arr[next++])
+             current++;
+             return {
+                value: arr.length <= n ? arr : undefined,
+                done: current > n,
+             };
+          }
+       };
+    }
+ };
 
-    [Symbol.iterator](number){
-        let fibonacciNumbers = [0, 1];
-
-        return{
-            next(){
-                return{
-                    value: (prevNumber - 1) + (nextNumber -2),
-                    done: false,
-                };
-            }
-        };
-    },
-};
-
-for(let num of fibonacciIterator){
+for(let num of fibonachiIterator){
     console.log(num);
+}
+
+function* fibonachiGenerator(n, current, next) {
+    current = current || 0;
+    next = next || 1;
+ 
+    if (n == 0) {
+       return current;
+    }
+ 
+    yield current
+    yield* fibonachiGenerator(n - 1, next, current + next);
+ };
+ 
+let fn = fibonachiGenerator(10);
+
+for(let f of fn){
+    console.log(f);
 }
