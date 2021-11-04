@@ -7,7 +7,7 @@ Function.prototype.customBind = function(thisArg, ...args){
 
     return function(...res){
         return object[symbol](...args, ...res);
-    }
+    };
 };
 
 //custom Call
@@ -32,7 +32,7 @@ Array.prototype.customForEach = function (compare) {
 Array.prototype.customMap = function (compare) {
     let result = [];
 
-    for (let i in this) {
+    for ( let i in this ) {
         result[i] = compare(this[i], i, this);
     }
 
@@ -43,7 +43,7 @@ Array.prototype.customMap = function (compare) {
 Array.prototype.customFillter = function (compare) {
     let result = [];
 
-    for (let i = 0; i <= this.length - 1; i++) {
+    for ( let i = 0; i <= this.length - 1; i++ ) {
         if (compare(this[i], i, this)) {
             result.push(this[i]);
         }
@@ -56,8 +56,11 @@ Array.prototype.customFillter = function (compare) {
 Array.prototype.customReduce = function (compare, accum) {
     accum = accum || 0;
 
-    for (let i = 0; i <= this.length - 1; i++) {
-        accum = compare(this[i], accum);
+    for ( let i = 0; i < this.length; i++ ) {
+        if ( this[i] !== null && this[i] !== undefined ) {
+            accum = compare(this[i], accum);
+            this.length++;
+        }
     }
     
     return accum;
