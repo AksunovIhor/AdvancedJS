@@ -2,8 +2,8 @@
 
 //custom Bind, Call
 Function.prototype.customBind = function(thisArg, ...args){
-    let objectPointer = Object.assign({}, thisArg);
-    objectPointer.func = this;
+    let object = Object.assign({}, thisArg);
+    object.func = this;
 
     return function( ...res ) {
         return Object.assign(...args, ...res);
@@ -11,16 +11,19 @@ Function.prototype.customBind = function(thisArg, ...args){
 };
 
 Function.prototype.customCall = function(thisArg, ...args){
-    let objectPointer = Object.assign({}, thisArg);
-    objectPointer.func = this;
+    let object = Object.assign({}, thisArg);
+    object.func = this;
 
-    return objectPointer.func(...args);
+    return object.func(...args);
 };
 
 //Array methods
 Array.prototype.customForEach = function (compare) {
     for ( let i = 0; i < this.length; i++ ) {
-        compare(this[i], i, this);
+        if ( this[i] !== null && this[i] !== undefined ) {
+            compare(this[i], i, this);
+        }
+        
     }
 };
 
@@ -28,7 +31,7 @@ Array.prototype.customMap = function (compare) {
     let result = [];
 
     for ( let i = 0; i < this.length; i++ ) {
-        if ( this[i] !== undefined && this[i] !== null) {
+        if ( this[i] !== null && this[i] !== undefined ) {
             result[i] = compare(this[i], i, this);
         }
     }
@@ -39,8 +42,10 @@ Array.prototype.customFillter = function (compare) {
     let result = [];
 
     for ( let i = 0; i < this.length; i++ ) {
-        if ( compare(this[i], i, this) ) {
-            result.push(this[i]);
+        if ( this[i] !== null && this[i] !== undefined ) {
+            if ( compare(this[i], i, this) ) {
+                result.push(this[i]);
+            }
         }
     }
 
@@ -53,7 +58,6 @@ Array.prototype.customReduce = function (compare, accum) {
     for ( let i = 0; i < this.length; i++ ) {
         if ( this[i] !== null && this[i] !== undefined ) {
             accum = compare(accum, this[i], i, this);
-            this.length++;
         }
     }
     
