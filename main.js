@@ -20,9 +20,8 @@ Function.prototype.customCall = function(thisArg, ...args){
 };
 
 //Array methods
-
 Array.prototype.customForEach = function (compare) {
-    for (let i = 0; i < this.length; i++) {
+    for ( let i = 0; i < this.length; i++ ) {
         compare(this[i], i, this);
     }
 };
@@ -40,8 +39,8 @@ Array.prototype.customMap = function (compare) {
 Array.prototype.customFillter = function (compare) {
     let result = [];
 
-    for ( let i = 0; i <= this.length - 1; i++ ) {
-        if (compare(this[i], i, this)) {
+    for ( let i = 0; i < this.length; i++ ) {
+        if ( compare(this[i], i, this) ) {
             result.push(this[i]);
         }
     }
@@ -63,46 +62,50 @@ Array.prototype.customReduce = function (compare, accum) {
 };
 
 //fibonacci Iterator, Generator
-let fibonachiIterator = {
-    a: 0,
-    b: 1,
-    n: 10,
+let fibonacciIterator = {
+    firstNumber: 0,
+    secondNumber: 1,
+    fibonacciNumber: 7,
     [Symbol.iterator]() {
-       let current = this.a;
-       let next = this.b;
-       let n = this.n;
-       let arr = [current, next];
-       return {
-          next() {
-             arr.push(arr[current] + arr[next++])
-             current++;
-             return {
-                value: arr.length <= n ? arr : undefined,
-                done: current > n,
-             };
-          }
-       };
+        let prev = this.firstNumber;
+        let next = this.secondNumber;
+        let amountNumber = this.fibonacciNumber;
+        let fibonacciArray = [prev, next];
+
+        return {
+            next() {
+                fibonacciArray.push(fibonacciArray[prev] + fibonacciArray[next++]);
+                prev++;
+
+                return {
+                    value: fibonacciArray.length <= amountNumber ? fibonacciArray : undefined,
+                    done: prev > amountNumber,
+                };
+            }
+        };
+    },
+};
+
+let fibonacciGenerator = {
+    firstNumber: 0,
+    secondNumber: 1,
+    *[Symbol.iterator](amountNumber){
+        let fibonacciNumbers = [0, 1].splice(0, amountNumber);
+
+        for ( let i = 2; i < amountNumber; i++ ) {
+            fibonacciNumbers.push(fibonacciNumbers[i - 1] + fibonacciNumbers[i - 2]);
+        }
+
+        yield fibonacciNumbers;
     }
- };
+};
 
-for(let num of fibonachiIterator){
-    console.log(num);
-}
+/*function* fibonacciGenerator2(amountNumber) {
+    let fibonacciNumbers = [0, 1].splice(0, amountNumber);
 
-function* fibonachiGenerator(n, current, next) {
-    current = current || 0;
-    next = next || 1;
- 
-    if (n == 0) {
-       return current;
+    for ( let i = 2; i < amountNumber; i++ ) {
+        fibonacciNumbers.push(fibonacciNumbers[i - 1] + fibonacciNumbers[i - 2]);
     }
- 
-    yield current
-    yield* fibonachiGenerator(n - 1, next, current + next);
- };
- 
-let fn = fibonachiGenerator(10);
 
-for(let f of fn){
-    console.log(f);
-}
+    yield fibonacciNumbers;
+}*/
