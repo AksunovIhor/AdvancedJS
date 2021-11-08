@@ -2,21 +2,19 @@
 
 //custom Bind, Call
 Function.prototype.customBind = function(thisArg, ...args){
-    let symbol = Symbol("function");
-    let object = Object.assign(Object.assign({}, thisArg), {[symbol] : this});
+    let objectPointer = Object.assign({}, thisArg);
+    objectPointer.func = this;
 
-    return function(...res){
-        return object[symbol](...args, ...res);
-    };
+    return function( ...res ) {
+        return Object.assign(...args, ...res);
+    }
 };
 
 Function.prototype.customCall = function(thisArg, ...args){
-    let symbol = Symbol("function");
-    let object = Object.assign(Object.assign({}, thisArg), {[symbol] : this});
+    let objectPointer = Object.assign({}, thisArg);
+    objectPointer.func = this;
 
-    return (function(...res){
-        return object[symbol](...args);
-    })();
+    return objectPointer.func(...args);
 };
 
 //Array methods
@@ -29,10 +27,11 @@ Array.prototype.customForEach = function (compare) {
 Array.prototype.customMap = function (compare) {
     let result = [];
 
-    for ( let i in this ) {
-        result[i] = compare(this[i], i, this);
+    for ( let i = 0; i < this.length; i++ ) {
+        if ( this[i] !== undefined && this[i] !== null) {
+            result[i] = compare(this[i], i, this);
+        }
     }
-
     return result.splice(0, this.length);
 };
 
@@ -53,7 +52,7 @@ Array.prototype.customReduce = function (compare, accum) {
 
     for ( let i = 0; i < this.length; i++ ) {
         if ( this[i] !== null && this[i] !== undefined ) {
-            accum = compare(this[i], accum);
+            accum = compare(accum, this[i], i, this);
             this.length++;
         }
     }
